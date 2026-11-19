@@ -4,7 +4,11 @@
 
 Engine Build Checklist is a BepInEx mod for **Car Mechanic Simulator 2018** that turns the engine stand into a practical build reference. Open a live parts overview, see installed and missing quantities, and add parts to the game’s shopping list without leaving your build workflow.
 
-The supplied source declares version **1.0.10** and plugin ID `local.cms18.enginebuildchecklist`.
+The supplied source declares version **1.0.11** and plugin ID `local.cms18.enginebuildchecklist`.
+
+## Latest patch: 1.0.11
+
+Addresses [issue #1](https://github.com/importantbatata/engine-mod-checklist-cms2018-bepinex/issues/1), where the checklist option appeared on unrelated interactable items while an engine was on the stand. The radial patch now uses an explicit engine-stand menu allowlist and verifies the original option list before appending the checklist. F8 remains available in supported garage modes. See [CHANGELOG.md](CHANGELOG.md) for the patch details.
 
 ## Features
 
@@ -59,7 +63,7 @@ After the plugin first loads, BepInEx generates `BepInEx/config/local.cms18.engi
 ToggleChecklist = F8
 ```
 
-The radial option is enabled when an engine is present on the stand. The code extends the engine-stand wheel and, under its context checks, the top-level garage wheel. The panel opens after the radial menu finishes closing. F8 can open an empty panel with a prompt to place an engine on the stand.
+The radial option is enabled when an engine is present on the stand. Version 1.0.11 restricts the option to the five supported engine-stand menu keys and requires the displayed options to match that menu’s configured top-level options. Unrelated garage wheels and submenus are left unchanged. The panel opens after the radial menu finishes closing. F8 can open an empty panel with a prompt to place an engine on the stand.
 
 The panel closes when you leave a supported garage/build mode. It restores the saved cursor state when closed.
 

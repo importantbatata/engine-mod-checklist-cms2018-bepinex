@@ -5,7 +5,7 @@ using BepInEx.Configuration;
 using HarmonyLib;
 using UnityEngine;
 
-[BepInPlugin(PluginId, "Engine Build Checklist", "1.0.10")]
+[BepInPlugin(PluginId, "Engine Build Checklist", "1.0.11")]
 public sealed partial class EngineBuildChecklist : BaseUnityPlugin
 {
     private const string PluginId = "local.cms18.enginebuildchecklist";

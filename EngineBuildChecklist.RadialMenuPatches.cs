@@ -45,46 +45,31 @@ public sealed partial class EngineBuildChecklist
 
     private static string[] BuildChecklistOptions(string[] original, string menuKey, FileLoader.IniFile config)
     {
-        foreach (string option in original)
+        switch (menuKey)
         {
-            if (option == ChecklistOption)
+            case "!EngineStand":
+            case "!PartSelectEngineStand":
+            case "!PartSelectMountEngineStand":
+            case "!PartUnMountEngineStand":
+            case "!ExamineConditionEngineStand":
+                break;
+            default:
                 return original;
         }
 
         GameScript game = GameScript.Get();
-        GameMode mode = GameMode.Get();
-        if (game == null || mode == null || game.GetEngineStand() == null)
+        if (game == null || game.GetEngineStand() == null || config == null)
             return original;
 
-        bool standWheel = menuKey == "!EngineStand" ||
-            (!string.IsNullOrEmpty(menuKey) && menuKey.EndsWith("EngineStand", StringComparison.Ordinal)) ||
-            (game.IsOnMachine() && game.GetMachineOnMouseOverType() == IOSpecialType.EngineStand);
-        if (!standWheel)
-            standWheel = Array.Exists(original, delegate(string option)
-            {
-                return option != null && option.StartsWith("engine_", StringComparison.Ordinal);
-            });
+        // The wheel keeps its previous menu key while showing a submenu.
+        string[] standOptions = config.GetString(menuKey, string.Empty).Split(',');
+        if (standOptions.Length != original.Length)
+            return original;
 
-        if (!standWheel)
+        for (int i = 0; i < original.Length; i++)
         {
-            // The car and stand can share the same garage wheel depending on what the raycast hit.
-            // Offer quick access from that wheel while there is an engine on the stand.
-            if (!IsBuildMode(mode.GetPreviousMode()) || !HasStandEngine(game))
+            if (original[i] == ChecklistOption || original[i] != standOptions[i].Trim())
                 return original;
-
-            // Submenus reuse the previous INI key; only extend the top-level options.
-            if (config == null || string.IsNullOrEmpty(menuKey))
-                return original;
-
-            string[] primaryOptions = config.GetString(menuKey, string.Empty).Split(',');
-            if (primaryOptions.Length != original.Length)
-                return original;
-
-            for (int i = 0; i < primaryOptions.Length; i++)
-            {
-                if (primaryOptions[i].Trim() != original[i])
-                    return original;
-            }
         }
 
         var options = new string[original.Length + 1];
